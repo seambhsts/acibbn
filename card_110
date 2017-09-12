@@ -1,0 +1,20 @@
+*LINES STARTING WITH AN ASTERISK ARE COMMENTED
+TAU      880.2                               experimental value of neutron lifetime
+DNNU     0                                   number of extra neutrinos
+IXIE     11                                  integer giving the value of nu_e chemical potential
+RHOLMBD  0.                                  value of cosmological constant at the BBN epoch
+OVERWRITE  T                                 option for overwriting the output files
+FOLLOW  F                                    option for following the evolution on the screen
+OMEGABH  .02226                              value of Omega_B h^2
+OUTPUT   T  9  1 2 3 4 5 6 7 8 9             options for customizing the output
+NETWORK  26                                  number of nuclides in the network
+FILES  parthenope_110.out nuclides_110.out   names of the two output files
+* The following are examples of the use of the keyword RATES
+*RATES    1  (29 2 1.)
+*RATES    10  (45 3 0.) (46 3 0.) (47 3 0.) (48 3 0.) (49 3 0.) (50 3 0.) (51 3 0.) (52 3 0.) (53 3 0.) (54 3 0.)
+*RATES    10  (55 3 0.) (56 3 0.) (57 3 0.) (58 3 0.) (59 3 0.) (60 3 0.) (61 3 0.) (62 3 0.) (63 3 0.) (64 3 0.)
+*RATES    10  (65 3 0.) (66 3 0.) (67 3 0.) (68 3 0.) (69 3 0.) (70 3 0.) (71 3 0.) (72 3 0.) (73 3 0.) (74 3 0.)
+*RATES    10  (75 3 0.) (76 3 0.) (77 3 0.) (78 3 0.) (79 3 0.) (80 3 0.) (81 3 0.) (82 3 0.) (83 3 0.) (84 3 0.)
+*RATES    10  (85 3 0.) (86 3 0.) (87 3 0.) (88 3 0.) (89 3 0.) (90 3 0.) (91 3 0.) (92 3 0.) (93 3 0.) (94 3 0.)
+*RATES    3  (95 3 0.) (96 3 0.) (97 3 0.)
+EXIT                                         terminates input
