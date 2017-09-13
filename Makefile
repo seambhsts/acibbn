@@ -5,15 +5,16 @@
 
 SHELL	= /bin/sh
 
-FC	= xlf
-FFLAGS	= -O4
+FC	= gfortran
+#FFLAGS	= -Ofast
+FFLAGS  = -mtune=corei7 -march=native-flto -m64 -lpthread -O2
 
-OBJIBBN	= ibbn2k2.o nuclrate.o nudcupl.o daux.o
+OBJIBBN	= bbn2k.o dvode.o dqagi.o cbesk.o
 
-incpara = param.in
+incpara = card_110
 
 
-default: Ibbn2k 
+default: bbn2k 
 
 Ibbn2k: $(OBJIBBN)
 	$(FC) $(FFLAGS) -o $@ $(OBJIBBN)
