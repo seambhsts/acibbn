@@ -9,7 +9,7 @@ FC	= gfortran
 #FFLAGS	= -Ofast
 FFLAGS  = -mtune=corei7 -march=native-flto -m64 -lpthread -O2
 
-OBJIBBN	= main_110.o parthenope_110.o dvode.o dqagi.o cbesk.o
+OBJIBBN	= main_110.o parthenope_110.o dvode.o dqagi.o cbesk.o zeroin.o
 
 incpara = card_110
 
