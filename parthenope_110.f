@@ -942,7 +942,9 @@ C-----Bessel function arguments
 C-----Bessel functions K1, K2, K3 e K4 calculated at n zr (n integer):
 C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	ifail=0
-	call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
+	call cbesk(zr1,1.d0,4,1,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel1'
 	endif
@@ -950,7 +952,9 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	  write(2,*) 'nz=', nz,' da bessel1'
 	endif
 	ifail=0
-	call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
+	call cbesk(zr2,1.d0,4,1,kz2,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel2'
 	endif
@@ -958,7 +962,9 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	  write(2,*) 'nz=', nz,' da bessel2'
 	endif
 	ifail=0
-	call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
+	call cbesk(zr3,1.d0,4,1,kz3,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel3'
 	endif
@@ -966,7 +972,9 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	  write(2,*) 'nz=', nz,' da bessel3'
 	endif
 	ifail=0
-	call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
+	call cbesk(zr4,1.d0,4,1,kz4,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel4'
 	endif
@@ -974,7 +982,9 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	  write(2,*) 'nz=', nz,' da bessel4'
 	endif
 	ifail=0
-	call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
+	call cbesk(zr5,1.d0,4,1,kz5,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel5'
 	endif
@@ -982,7 +992,9 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	  write(2,*) 'nz=', nz,' da bessel5'
 	endif
 	ifail=0
-	call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
+	call cbesk(zr6,1.d0,4,1,kz6,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel6'
 	endif
@@ -990,7 +1002,9 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	  write(2,*) 'nz=', nz,' da bessel6'
 	endif
 	ifail=0
-	call s18dcf(1.d0,zr7,4,'u',kz7,nz,ifail)
+C----- Alternative to NAG library
+C	call s18dcf(1.d0,zr7,4,'u',kz7,nz,ifail)
+	call cbesk(zr7,1.d0,4,1,kz7,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel7'
 	endif
@@ -2536,7 +2550,9 @@ C--------------------------Local variables------------------------------
 	PARAMETER        (LW=800,LIW=LW/4)
 	INTEGER          IFAIL,IW(LIW)
 	DIMENSION        W(LW)
-	EXTERNAL         D01AMF,INTLHFUN
+C-----Alternative to NAG library
+C	EXTERNAL         D01AMF,INTLHFUN
+	EXTERNAL         DQAGI,INTLHFUN
 C--------------------------Common variables-----------------------------
 	DIMENSION        COEF(4)
 	EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -2561,8 +2577,12 @@ C-----Precision of integrations
 	epsrel=1.d-6
 
 	ifail=0
-	call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
-     .		liw,ifail)
+C-----Alternative to NAG library
+C	call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
+C     .		liw,ifail)
+
+      call dqagi(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
+	.		liw,ifail)
 	if (ifail.ne.0) then
 	  write(2,998) 'Exit D01AMF with IFAIL = ',ifail
 	endif
@@ -2674,7 +2694,9 @@ C	chemical potential
 	DATA             RANGE/.1D0/
 	DATA             EPS/1.D-13/
 	DATA             ETA/0.D0/
-	EXTERNAL         C05AGF,LHFUN
+C-----Alternative NAG library
+C	EXTERNAL         C05AGF,LHFUN
+	EXTERNAL         ROOT_RC,LHFUN
 C--------------------------Common variables-----------------------------
 	INTEGER          AA(NNUC)
 	COMMON/ANUM/     AA
@@ -2746,6 +2768,12 @@ C--------------------------Common variables-----------------------------
 
 	INTEGER          ZZ(NNUC)
 	COMMON/ZNUM/     ZZ
+	
+	REAL ( kind = 8 )	ferr, phi, q(9), root_rc, xerr
+	INTEGER ( kind = 4 ) ir, itr, it_max
+	DATA		ir/0/
+	DATA		it_max/30/
+	DATA		q(1:9) = 0.0D+00
 C-----------------------------------------------------------------------
 
 C-----Open data files
@@ -2978,10 +3006,33 @@ C	with Lh0=2 zeta(3) sumzy0/pi^2 2.75 etaf
 	lh0=0.6698660552846518*(etinc/2.75)*sumzy0*etaf
 	phi=1.d-8
 	ifail=1
-	call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
-	if (ifail.ne.0) then
-	  write(2,9998) 'Exit C05AGF with IFAIL = ',ifail
-	endif
+C-----Alternative to NGA library
+C	call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
+	do
+		phi =  roots_rc(phi,lhfun,ferr,xerr,q)
+		if ( ferr < 1.0D-08 ) then
+			write ( *, '(a)' ) ' '
+			write ( *, '(a)' ) '  Uncertainty in F(X) less than tolerance'
+			exit
+		end if
+		if ( xerr < 1.0D-08 ) then
+			write ( *, '(a)' ) ' '
+			write ( *, '(a)' ) '  Width of X interal less than tolerance.'
+			exit
+		end if
+		if ( it_max < it ) then
+			write ( *, '(a)' ) ' '
+			write ( *, '(a)' ) '  Too many iterations!'
+			exit
+		end if
+
+		it = it + 1
+        
+	  end do
+
+		if (ifail.ne.0) then
+		  write(2,9998) 'Exit C05AGF with IFAIL = ',ifail
+		endif
 	yy0(1)=phi
 
 C-----Inizialization of the counters

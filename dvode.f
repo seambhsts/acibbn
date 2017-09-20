@@ -1,4 +1,4 @@
-*DECK DVODE
+
       SUBROUTINE DVODE (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF,
      2            RPAR, IPAR)
