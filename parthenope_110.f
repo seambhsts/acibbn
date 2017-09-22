@@ -325,6 +325,8 @@ C  ZZ(NNUC)         = Nuclide atomic charges
 C
 C=======================================================================
 	SUBROUTINE PARTHENOPE(ETAF0,DNNU0,TAU0,IXIE0,RHOLMBD0)
+C-----Altenative to NAG library
+	USE DVODE_F90_M
 Cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C	This subroutine drives the resolution of the BBN set of equations
 C
@@ -366,6 +368,9 @@ C-----Differential equation resolution parameters
 	EXTERNAL         D02NVF,D02NSF,D02NBF,D02NBZ,D02NBY,D02NYF,FCN
 C-----Print output
 	EXTERNAL         OUTEND
+C-----Alternative NAG library
+	TYPE(VODE_OPTS) :: OPTIONS
+
 C--------------------------Common variables-----------------------------
 	DIMENSION        COEF(4)
 	EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -385,7 +390,6 @@ C--------------------------Common variables-----------------------------
 	CHARACTER        NAMEFILE1*50,NAMEFILE2*50
 	COMMON/OUTFILES/ NAMEFILE1,NAMEFILE2
 C-----------------------------------------------------------------------
-
 C-----Initial and final values for the evolution variable z=me/T
 	zin=me/10.
 	zend=me*130.
@@ -404,24 +408,35 @@ C	(D02NBF) NAG subroutines
 	  const(l)=0.d0
 	enddo
 	ifail=0
-	call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
-     .		hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
-	call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
+C-----Alternative to NAG library
+C	call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
+C     .		hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
+C	call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
 	itrace=0
 	ifail=1
 	itol=1
 	rtol(1)=1.d-11
 	atol(1)=1.d-14
-	itask=4
-	call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
-     .		atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
-     .		d02nby,itask,itrace,ifail)
+C-----Alternative to NAG library
+C	itask=4
+	itask=1
+
+C	call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
+C     .		atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
+C     .		d02nby,itask,itrace,ifail)
+     
+      OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),ABSERR=atol(1))
+      CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,ifail,OPTIONS)
+     
 	do l=1,inuc
 	  if (yy(l+1).lt.ymin) yy(l+1)=ymin
 	enddo
 
 C-----Write details about resolution of differential equations
-	if (ifail.eq.0) then
+C-----Alternative to NAG library
+C	if (ifail.eq.0) then
+	if (ifail.eq.2) then
+	
 	  call outend(zend,yy)
 	  call d02nyf(inuc+1,inuc+1,hu,h,tcur,tolsf,rwork,nst,nre,
      .		  nje,nqu,nq,niter,imxer,algequ,inform,ifail)
@@ -623,7 +638,8 @@ C-----Calculation of the time step dt corresponding to dz
 	if ((ifcn1.eq.0).and.(ifcn.eq.1)) then
 	  dt=dabs(1./alp*2.*.738/me**2*z*dz)
 	else
-	  dt=dabs(-1./alp*(lhphi*kap1p+rhoehphi*kap2)/(me*z*thetah*den)*dz)
+	  dt=dabs(-1./alp*(lhphi*kap1p+rhoehphi*kap2)
+     .  /(me*z*thetah*den)*dz)
 	endif
 
 C-----Initialize the right hand side of the differential equations
@@ -2582,7 +2598,7 @@ C	call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
 C     .		liw,ifail)
 
       call dqagi(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
-	.		liw,ifail)
+     .		liw,ifail)
 	if (ifail.ne.0) then
 	  write(2,998) 'Exit D01AMF with IFAIL = ',ifail
 	endif
@@ -2768,12 +2784,13 @@ C--------------------------Common variables-----------------------------
 
 	INTEGER          ZZ(NNUC)
 	COMMON/ZNUM/     ZZ
-	
+
+C-----Alternative to NAG library
 	REAL ( kind = 8 )	ferr, phi, q(9), root_rc, xerr
 	INTEGER ( kind = 4 ) ir, itr, it_max
 	DATA		ir/0/
 	DATA		it_max/30/
-	DATA		q(1:9) = 0.0D+00
+	DATA		q/9*0.D0/
 C-----------------------------------------------------------------------
 
 C-----Open data files

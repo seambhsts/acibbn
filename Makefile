@@ -7,20 +7,27 @@ SHELL	= /bin/sh
 
 FC	= gfortran
 #FFLAGS	= -Ofast
-FFLAGS  = -mtune=corei7 -march=native-flto -m64 -lpthread -O2
+FFLAGS  = -mtune=corei7 -march=native -flto -m64 -lpthread -O2
+BESSELOBJDIR = ./amos
 
-OBJIBBN	= main_110.o parthenope_110.o dvode.o dqagi.o cbesk.o zeroin.o
+OBJBESSEL = $(BESSELOBJDIR)/*
+OBJBBN	= dvode_f90_m.o dqagi.o cbesk.o root_rc.o parthenope_110.o main_110.o 
+.SUFFIXES: .f90 .f
+
+%.o : %.f90
+	$(FC) -c $(FFLAGS) $< -o $@
 
 incpara = card_110
 
 
-default: bbn2k17 
+default: BBN2k17 
 
-Ibbn2k: $(OBJIBBN)
-	$(FC) $(FFLAGS) -o $@ $(OBJIBBN)
+BBN2k17: $(OBJBBN)
+	$(FC) $(FFLAGS) -o $@ $(OBJBBN)
 
-$(OBJIBBN): $(incpara)
+$(OBJBBN): $(incpara)
 
+all: clean BBN2k17
 
 clean:
-	-rm -f *.o
+	-rm -f *.o *.mod
