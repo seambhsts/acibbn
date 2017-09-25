@@ -438,8 +438,9 @@ C	if (ifail.eq.0) then
 	if (ifail.eq.2) then
 	
 	  call outend(zend,yy)
-	  call d02nyf(inuc+1,inuc+1,hu,h,tcur,tolsf,rwork,nst,nre,
-     .		  nje,nqu,nq,niter,imxer,algequ,inform,ifail)
+C-----Alternative to NAG library
+C	  call d02nyf(inuc+1,inuc+1,hu,h,tcur,tolsf,rwork,nst,nre,
+C     .		  nje,nqu,nq,niter,imxer,algequ,inform,ifail)
 	  write(2,*)
 	  write(2,*) '------------------------------------------',
      .		'--------------------------'
@@ -3026,7 +3027,7 @@ C	with Lh0=2 zeta(3) sumzy0/pi^2 2.75 etaf
 C-----Alternative to NGA library
 C	call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
 	do
-		phi =  roots_rc(phi,lhfun,ferr,xerr,q)
+		phi =  root_rc(phi,lhfun,ferr,xerr,q)
 		if ( ferr < 1.0D-08 ) then
 			write ( *, '(a)' ) ' '
 			write ( *, '(a)' ) '  Uncertainty in F(X) less than tolerance'
