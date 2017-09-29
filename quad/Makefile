@@ -9,26 +9,18 @@ FC	= gfortran
 #FFLAGS	= -Ofast
 FFLAGS  = -mtune=corei7 -march=native -flto -m64 -lpthread -O2
 
-OBJBBN	= dvode_f90_m.o root_rc.o parthenope_110.o main_110.o 
+OBJQUAD = dqagie.o xgetua.o xersav.o xerctl.o xerprt.o s88fmt.o xerabt.o fdump.o j4save.o xerrwv.o xerror.o r1mach.o i1mach.o d1mach.o dqelg.o dqpsrt.o dqk15i.o dqagi.o
 
 %.o : %.f90
 	$(FC) -c $(FFLAGS) $< -o $@
 
-BBN2k17:  $(OBJBBN) libbesl.a libquad.a
-	$(FC) $(FFLAGS) -o $@ $(OBJBBN) ./amos/libbesl.a ./quad/libquad.a
-
-default: BBN2k17 
-all: clean BBN2k17
-
-libbesl.a: 
-	make -C ./amos
+libquad.a: $(OBJQUAD)
+	ar rv libquad.a $(OBJQUAD)
+	ranlib libquad.a
 	
-libquad.a:
-	make -C ./quad
-	
+
+default: libquad.a 
+all: clean libquad.a
 
 clean:
 	-rm -f *.o *.mod
-	-rm -f ./amos/*.o ./amos/*.mod
-	-rm -f ./quad/*.o ./quad/*.mod
-	
