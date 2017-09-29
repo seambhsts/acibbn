@@ -368,7 +368,7 @@ C-----Differential equation resolution parameters
 	EXTERNAL         D02NVF,D02NSF,D02NBF,D02NBZ,D02NBY,D02NYF,FCN
 C-----Print output
 	EXTERNAL         OUTEND
-C-----Alternative NAG library
+C-----Alternative NAG library by M.O
 	TYPE(VODE_OPTS) :: OPTIONS
 
 C--------------------------Common variables-----------------------------
@@ -408,7 +408,7 @@ C	(D02NBF) NAG subroutines
 	  const(l)=0.d0
 	enddo
 	ifail=0
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 C	call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
 C     .		hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
 C	call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
@@ -417,7 +417,7 @@ C	call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
 	itol=1
 	rtol(1)=1.d-11
 	atol(1)=1.d-14
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 C	itask=4
 	itask=1
 
@@ -433,12 +433,12 @@ C     .		d02nby,itask,itrace,ifail)
 	enddo
 
 C-----Write details about resolution of differential equations
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 C	if (ifail.eq.0) then
 	if (ifail.eq.2) then
 	
 	  call outend(zend,yy)
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 C	  call d02nyf(inuc+1,inuc+1,hu,h,tcur,tolsf,rwork,nst,nre,
 C     .		  nje,nqu,nq,niter,imxer,algequ,inform,ifail)
 	  write(2,*)
@@ -467,7 +467,7 @@ C     .		  nje,nqu,nq,niter,imxer,algequ,inform,ifail)
      .		'--------------------------'
 	else
 	  write(2,*)
-	  write(2,9999) 'Exit D02NBF with IFAIL = ',ifail,
+	  write(2,9999) 'Exit DVODE_F90 with IFAIL = ',ifail,
      .		'  and z = ',z
 	endif
 	close(2)
@@ -959,7 +959,7 @@ C-----Bessel function arguments
 C-----Bessel functions K1, K2, K3 e K4 calculated at n zr (n integer):
 C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
 	call cbesk(zr1,1.d0,4,1,kz1,nz,ifail)
 	if (ifail.ne.0) then
@@ -969,7 +969,7 @@ C	call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
 	  write(2,*) 'nz=', nz,' da bessel1'
 	endif
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
 	call cbesk(zr2,1.d0,4,1,kz2,nz,ifail)
 	if (ifail.ne.0) then
@@ -979,7 +979,7 @@ C	call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
 	  write(2,*) 'nz=', nz,' da bessel2'
 	endif
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
 	call cbesk(zr3,1.d0,4,1,kz3,nz,ifail)
 	if (ifail.ne.0) then
@@ -989,7 +989,7 @@ C	call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
 	  write(2,*) 'nz=', nz,' da bessel3'
 	endif
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
 	call cbesk(zr4,1.d0,4,1,kz4,nz,ifail)
 	if (ifail.ne.0) then
@@ -999,7 +999,7 @@ C	call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
 	  write(2,*) 'nz=', nz,' da bessel4'
 	endif
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
 	call cbesk(zr5,1.d0,4,1,kz5,nz,ifail)
 	if (ifail.ne.0) then
@@ -1009,7 +1009,7 @@ C	call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
 	  write(2,*) 'nz=', nz,' da bessel5'
 	endif
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
 	call cbesk(zr6,1.d0,4,1,kz6,nz,ifail)
 	if (ifail.ne.0) then
@@ -1019,7 +1019,7 @@ C	call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
 	  write(2,*) 'nz=', nz,' da bessel6'
 	endif
 	ifail=0
-C----- Alternative to NAG library
+C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr7,4,'u',kz7,nz,ifail)
 	call cbesk(zr7,1.d0,4,1,kz7,nz,ifail)
 	if (ifail.ne.0) then
@@ -2567,7 +2567,7 @@ C--------------------------Local variables------------------------------
 	PARAMETER        (LW=800,LIW=LW/4)
 	INTEGER          IFAIL,IW(LIW)
 	DIMENSION        W(LW)
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 C	EXTERNAL         D01AMF,INTLHFUN
 	EXTERNAL         DQAGI,INTLHFUN
 C--------------------------Common variables-----------------------------
@@ -2594,7 +2594,7 @@ C-----Precision of integrations
 	epsrel=1.d-6
 
 	ifail=0
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 C	call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
 C     .		liw,ifail)
 
@@ -2711,7 +2711,7 @@ C	chemical potential
 	DATA             RANGE/.1D0/
 	DATA             EPS/1.D-13/
 	DATA             ETA/0.D0/
-C-----Alternative NAG library
+C-----Alternative NAG library by M.O
 C	EXTERNAL         C05AGF,LHFUN
 	EXTERNAL         ROOT_RC,LHFUN
 C--------------------------Common variables-----------------------------
@@ -2786,7 +2786,7 @@ C--------------------------Common variables-----------------------------
 	INTEGER          ZZ(NNUC)
 	COMMON/ZNUM/     ZZ
 
-C-----Alternative to NAG library
+C-----Alternative to NAG library by M.O
 	REAL ( kind = 8 )	ferr, phi, q(9), root_rc, xerr
 	INTEGER ( kind = 4 ) ir, itr, it_max
 	DATA		ir/0/
@@ -3024,7 +3024,7 @@ C	with Lh0=2 zeta(3) sumzy0/pi^2 2.75 etaf
 	lh0=0.6698660552846518*(etinc/2.75)*sumzy0*etaf
 	phi=1.d-8
 	ifail=1
-C-----Alternative to NGA library
+C-----Alternative to NGA library by M.O
 C	call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
 	do
 		phi =  root_rc(phi,lhfun,ferr,xerr,q)
@@ -3049,7 +3049,7 @@ C	call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
 	  end do
 
 		if (ifail.ne.0) then
-		  write(2,9998) 'Exit C05AGF with IFAIL = ',ifail
+		  write(2,9998) 'Exit root_rc with IFAIL = ',ifail
 		endif
 	yy0(1)=phi
 
