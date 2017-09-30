@@ -961,7 +961,7 @@ C	kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
-	call cbesk(zr1,1.d0,4,1,kz1,nz,ifail)
+	call cbesk(zr1,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel1'
 	endif
@@ -971,7 +971,7 @@ C	call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
-	call cbesk(zr2,1.d0,4,1,kz2,nz,ifail)
+	call cbesk(zr2,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel2'
 	endif
@@ -981,7 +981,7 @@ C	call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
-	call cbesk(zr3,1.d0,4,1,kz3,nz,ifail)
+	call cbesk(zr3,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel3'
 	endif
@@ -991,7 +991,7 @@ C	call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
-	call cbesk(zr4,1.d0,4,1,kz4,nz,ifail)
+	call cbesk(zr4,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel4'
 	endif
@@ -1001,7 +1001,7 @@ C	call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
-	call cbesk(zr5,1.d0,4,1,kz5,nz,ifail)
+	call cbesk(zr5,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel5'
 	endif
@@ -1011,7 +1011,7 @@ C	call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
-	call cbesk(zr6,1.d0,4,1,kz6,nz,ifail)
+	call cbesk(zr6,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel6'
 	endif
@@ -1021,7 +1021,7 @@ C	call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
 	ifail=0
 C----- Alternative to NAG library by M.O
 C	call s18dcf(1.d0,zr7,4,'u',kz7,nz,ifail)
-	call cbesk(zr7,1.d0,4,1,kz7,nz,ifail)
+	call cbesk(zr7,1.d0,1,4,kz1,nz,ifail)
 	if (ifail.ne.0) then
 	  write(2,*) 'ifail=', ifail,' da bessel7'
 	endif
@@ -2582,6 +2582,10 @@ C--------------------------Common variables-----------------------------
 
 	CHARACTER        NAMEFILE1*50,NAMEFILE2*50
 	COMMON/OUTFILES/ NAMEFILE1,NAMEFILE2
+
+C	Alternative to NAG library by M.O
+	INTEGER (kind = 4 ) neval, ier, limit, llenw, last, iiwork, work
+	REAL (kind = 8 ) abserr, wwork
 C-----------------------------------------------------------------------
 
 	phi=pphi
@@ -2597,11 +2601,10 @@ C-----Precision of integrations
 C-----Alternative to NAG library by M.O
 C	call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
 C     .		liw,ifail)
-
-      call dqagi(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
-     .		liw,ifail)
-	if (ifail.ne.0) then
-	  write(2,998) 'Exit D01AMF with IFAIL = ',ifail
+      call dqagi(intlhfun,zr,1,epsabs,epsrel,lhfun,abserr,neval,ier,limit,
+     .		llenw,last,iiwork, wwork)
+	if (ier.gt.0) then
+	  write(2,998) 'Exit DQAGI with ier = ',ier
 	endif
 	lhfun=lhfun/pi**2 - lh0
 
@@ -2635,9 +2638,9 @@ C-----------------------------------------------------------------------
 
 C-----Effective shift of evolution parameter due to radiative QED corrections
 	zr=z0+pi*alf/(3.*z0)
-
-	intlhfun=x*dsqrt(x**2-zr**2)*(fermi(x-phi)-fermi(x+phi))
-
+	
+	intlhfun=x*dsqrt(abs(x**2-zr**2))*(fermi(x-phi)-fermi(x+phi))
+		
 	RETURN
 	END
 
@@ -2787,7 +2790,7 @@ C--------------------------Common variables-----------------------------
 	COMMON/ZNUM/     ZZ
 
 C-----Alternative to NAG library by M.O
-	REAL ( kind = 8 )	ferr, phi, q(9), root_rc, xerr
+	REAL ( kind = 8 )	ferr, phi, q(9), root_rc, xerr, lhfunnew
 	INTEGER ( kind = 4 ) ir, itr, it_max
 	DATA		ir/0/
 	DATA		it_max/30/
@@ -3026,31 +3029,43 @@ C	with Lh0=2 zeta(3) sumzy0/pi^2 2.75 etaf
 	ifail=1
 C-----Alternative to NGA library by M.O
 C	call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
+!
+!  Initialization.
+!
+	itr = 0
+	it_max = 30
+	q(1:9) = 0.0D+00
+
 	do
-		phi =  root_rc(phi,lhfun,ferr,xerr,q)
+		lhfunnew = lhfun(phi)
+		if ( itr == 0 ) then 
+			write ( *, '(2x,g14.6,2x,14x,2x,g14.6)' ) phi, lhfunnew
+		else
+			write ( *, '(4(2x,g14.6))' ) phi, xerr, lhfunnew, ferr
+		end if
+		phi = root_rc(phi,lhfunnew,ferr,xerr,q)
 		if ( ferr < 1.0D-08 ) then
 			write ( *, '(a)' ) ' '
 			write ( *, '(a)' ) '  Uncertainty in F(X) less than tolerance'
 			exit
 		end if
+
 		if ( xerr < 1.0D-08 ) then
 			write ( *, '(a)' ) ' '
 			write ( *, '(a)' ) '  Width of X interal less than tolerance.'
 			exit
 		end if
-		if ( it_max < it ) then
+		if ( it_max < itr ) then
 			write ( *, '(a)' ) ' '
 			write ( *, '(a)' ) '  Too many iterations!'
 			exit
 		end if
-
-		it = it + 1
-        
-	  end do
-
-		if (ifail.ne.0) then
-		  write(2,9998) 'Exit root_rc with IFAIL = ',ifail
-		endif
+	      itr = itr + 1
+	end do
+	
+	if (ifail.ne.0) then
+	  write(2,9998) 'Exit root_rc with IFAIL = ',ifail
+	endif
 	yy0(1)=phi
 
 C-----Inizialization of the counters

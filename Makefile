@@ -9,13 +9,13 @@ FC	= gfortran
 #FFLAGS	= -Ofast
 FFLAGS  = -mtune=corei7 -march=native -flto -m64 -lpthread -O2
 
-OBJBBN	= dvode_f90_m.o root_rc.o parthenope_110.o main_110.o 
+OBJBBN	= cbesk_slatec.o quadpack_double.o dvode_f90_m.o root_rc.o parthenope_110.o main_110.o 
 
 %.o : %.f90
 	$(FC) -c $(FFLAGS) $< -o $@
 
-BBN2k17:  $(OBJBBN) libbesl.a libquad.a
-	$(FC) $(FFLAGS) -o $@ $(OBJBBN) ./amos/libbesl.a ./quad/libquad.a
+BBN2k17:  $(OBJBBN) 
+	$(FC) $(FFLAGS) -o $@ $(OBJBBN) 
 
 default: BBN2k17 
 all: clean BBN2k17
@@ -29,6 +29,4 @@ libquad.a:
 
 clean:
 	-rm -f *.o *.mod
-	-rm -f ./amos/*.o ./amos/*.mod
-	-rm -f ./quad/*.o ./quad/*.mod
 	
