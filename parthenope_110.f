@@ -3076,10 +3076,10 @@ C      call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
             end if
             itr = itr + 1
       end do
-      
-C      if (ifail.ne.0) then
-C        write(2,9998) 'Exit root_rc with IFAIL = ',fe
-C      endif
+C-----Alternative to NAG Library by M.O
+      if (xerr < 1.0D-20) then
+        write(2,9998) 'Exit root_rc with lhfunnew, phi = ',lhfunnew, phi
+      endif
 
 C----- Check phi0 by M.O
       write(*,*) "Initial value of Electron chemical potential phi0",phi
@@ -3095,7 +3095,9 @@ C-----Inizialization of the counters
       write(*,1004)
 1004      format(//1x,'Making the evolution'//)
 
-9998      format(2x,a,i8)
+C-----Alternative to NAG Library by M.O
+C 9998      format(2x,a,i8)
+9998      format(2x,a,2e12.3)
 
       RETURN
       END
