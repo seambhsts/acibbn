@@ -197,7 +197,7 @@ function r8_epsilon ( )
 !  Discussion:
 !
 !    The roundoff unit is a number R which is a power of 2 with the
-!    property that, to the precision of the computer's arithmetic,
+!    property that, to the precision of the computer's arithmetic,  '
 !      1 < 1 + R
 !    but
 !      1 = ( 1 + R / 2 )

@@ -72,7 +72,7 @@
 !     http://www.radford.edu/~thompson/vodef90web/
 !
 ! We are indebted to Richard Cox (ORNL) for providing us with his
-! implementation of MA28 in LSOD28.f (a variant of Alan Hindmarsh's
+! implementation of MA28 in LSOD28.f (a variant of Alan Hindmarsh''s
 ! lsodes.f). We are indebted to Alan Hindmarsh for numerous contributions.
 ! In particular, we borrowed liberally from the f77 solvers VODE.f,
 ! LSODAR.f, and LSODES.f while developing DVODE_F90. We are indebted
@@ -90,7 +90,7 @@
 ! to which we have access. In particular, we have used it with the Lahey
 ! F90 and Lahey-Fujitsu F95 compilers, the Compaq Visual F90 compiler,
 ! the g90 compiler, and the INTEL, Portland, Salford, and SUN compilers.
-! It should be noted that compilers such as Salford's FTN95 complain
+! It should be noted that compilers such as Salford''s FTN95 complain
 ! about uninitialized arrays passed as subroutine arguments and the use of
 ! slices of two dimensional arrays as one dimensional vectors, and will
 ! not run using the strictest compiler options. It is perfectly safe to
@@ -1131,7 +1131,7 @@
 !     Y, T, ISTATE.
 ! The work arrays RUSER and IUSER are used for conditional and
 ! optional input and optional output. (The term output here refers
-! to the return from subroutine DVODE to the user's calling program.)
+! to the return from subroutine DVODE to the user''s calling program.)
 ! The legality of input parameters will be thoroughly checked on the
 ! initial call for the problem, but not checked thereafter unless a
 ! change in input parameters is flagged by ISTATE = 3 in the input.
@@ -1212,7 +1212,7 @@
 !            3     array      scalar     RTOL(i)*ABS(Y(i)) + ATOL
 !            4     array      array      RTOL(i)*ABS(Y(i)) + ATOL(i)
 !          When either of these parameters is a scalar, it need not
-!          be dimensioned in the user's calling program.
+!          be dimensioned in the user''s calling program.
 !          If none of the above choices (with ITOL, RTOL, and ATOL
 !          fixed throughout the problem) is suitable, more general
 !          error controls can be obtained by substituting
@@ -1578,7 +1578,7 @@
 ! a replacement may have a major impact on performance, it should be
 ! done only when absolutely necessary, and only with great caution.
 ! (Note: The means by which the package version of a routine is
-! superseded by the user's version may be system-dependent.)
+! superseded by the user''s version may be system-dependent.)
 ! (a) DEWSET.
 ! The following subroutine is called just before each internal
 ! integration step, and sets the array of error weights, EWT, as
@@ -1970,7 +1970,7 @@
 !         deallocation error occurs.
           MODULE PROCEDURE CHECK_STAT
 
-!         JACSP can be called to calculate a Jacobian using Doug Salane's
+!         JACSP can be called to calculate a Jacobian using Doug Salane''s
 !         algoritm 
           MODULE PROCEDURE JACSP
 
@@ -2409,7 +2409,7 @@
 ! (i.e., one that is determined using finite differences) and
 ! structure pointere array that are determined internally
 ! using finite differences. If any of the following are true
-!    (1) DVODE_F90 doesn't perform satisfactorily for
+!    (1) DVODE_F90 doesn''t perform satisfactorily for
 !        your problem,
 !    (2) you are solving a very large problem,
 !    (3) you wish to supply the sparse pointer arrays
@@ -3013,7 +3013,7 @@
 !   OPTS%SPARSE = Use sparse linear algebra 
 !   OPTS%IOPT   = DVODE optional parameter input flag (IOPT)
 !   OPTS%NG     = Number of event functions
-!   RUSER(1)    = TCRIT (don't step past)
+!   RUSER(1)    = TCRIT (don''t step past)
 !   IUSER(1)    = Jacobian lower bandwidth (ML)
 !   IUSER(2)    = Jacobian upper bandwidth (MU)
 !   RUSER(5)    = Initial step size to try (H0)
@@ -3691,7 +3691,7 @@
 
 !       Process the miscellaneous options.
 
-!       Don't step past TCRIT variable.
+!       Don''t step past TCRIT variable.
         IF (PRESENT(TCRIT)) THEN
           RUSER(1) = TCRIT
         ELSE
@@ -3874,7 +3874,7 @@
 !                          (user supplied subroutine JAC required)
 ! SAVE_JACOBIAN          - Jacobian will be saved and reused
 ! CONSTANT_JACOBIAN      - Jacobian is constant
-! JACOBIAN_BY_JACSP      - Use Doug Salane's approximate Jacobian
+! JACOBIAN_BY_JACSP      - Use Doug Salane''s approximate Jacobian
 !                          algorithm
 ! LOWER_BANDWIDTH        - Lower bandwidth ML in DVODE
 ! UPPER_BANDWIDTH        - Upper bandwidth MU in DVODE
@@ -4007,7 +4007,7 @@
 ! USER_SUPPLIED_JACOBIAN   = exact Jacobian option
 !                            (requires user-supplied JAC)
 ! SAVE_JACOBIAN            = reuse saved Jacobians
-! JACOBIAN_BY_JACSP        = use Doug Salane's Jacobian algorithm
+! JACOBIAN_BY_JACSP        = use Doug Salane''s Jacobian algorithm
 ! TCRIT                    = critical time
 ! H0                       = initial step size to try
 ! HMAX                     = maximum allowable step size
@@ -4057,7 +4057,7 @@
 !   OPTS%SPARSE = Use sparse linear algebra 
 !   OPTS%IOPT   = DVODE optional parameter input flag (IOPT)
 !   OPTS%NG     = Number of event functions
-!   RUSER(1)    = TCRIT (don't step past)
+!   RUSER(1)    = TCRIT (don''t step past)
 !   IUSER(1)    = Jacobian lower bandwidth (ML)
 !   IUSER(2)    = Jacobian upper bandwidth (MU)
 !   RUSER(5)    = Initial step size to try (H0)
@@ -4119,7 +4119,7 @@
 ! JACOBIAN_BY_JACSP
 !
 ! Default:   .FALSE.
-! Change to: .TRUE. to approximate the Jacobian using Doug Salane's
+! Change to: .TRUE. to approximate the Jacobian using Doug Salane''s
 !            JACSP Jacobian subroutine
 !
 ! CONSTANT_JACOBIAN
@@ -5063,7 +5063,7 @@
 
 !       Process the miscellaneous options.
 
-!       Don't step past TCRIT variable.
+!       Don''t step past TCRIT variable.
         IF (PRESENT(TCRIT)) THEN
           RUSER(1) = TCRIT
         ELSE
@@ -5310,7 +5310,7 @@
         END IF
 
 !       Check that the arrays are large enough to hold the statistics.
-!       Some compilers don't like this use of SIZE.
+!       Some compilers don''t like this use of SIZE.
 !       IF (SIZE(RSTATS)<LRWUSER) THEN
 !       IF (SIZE(RSTATS)<31) THEN
 !         MSG = 'In GET_STATS, RSTATS array is too small.'
@@ -5583,7 +5583,7 @@
         ALLOCATE (IA(IADIM),JA(JADIM),FTEMP(NEQ),FPTEMP(NEQ),STAT=JER)
         CALL CHECK_STAT(JER,220)
 
-!       f = y'(t,y).
+!       f = y-prime(t,y).
         CALL DFN(NEQ,T,Y,FTEMP)
         IA(1) = 1
         K = 1
@@ -5852,7 +5852,7 @@
           CALL CHECK_STAT(JER,360)
         END IF
 
-!     Allocate the RWORK and WM work arrays if they haven't already
+!     Allocate the RWORK and WM work arrays if they haven''t already
 !     been allocated in a previous call.
 !     LRW = 20 + (MAXORD + 1) * NEQ
 !     LWMDIM =     
@@ -5969,7 +5969,7 @@
           ALLOCATE (YMAX(NEQ),STAT=JER)
           CALL CHECK_STAT(JER,420)
         END IF
-!       Allocate the event arrays if they haven't already been allocated
+!       Allocate the event arrays if they haven''t already been allocated
 !       in a previous call.
         IF (ALLOCATED(JROOT)) THEN
         ELSE
