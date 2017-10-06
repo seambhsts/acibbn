@@ -3,3 +3,7 @@ references.tex
 README.TXT
 changelog.txt
 *.o
+dvode_f90_m.o
+main_110.o
+parthenope_110.o
+*.o

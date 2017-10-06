@@ -367,6 +367,7 @@ C      LOGICAL          PETZLD,ALGEQU(NNUC+1)
       LOGICAL          PETZLD
       PARAMETER        (PETZLD=.TRUE.)
       PARAMETER        (HMIN=0.D0,HMAX=0.D0,H0=0.D0)
+      INTEGER          MXSTEP
 C-----Alternative NAG library by M.O
 C      DIMENSION        CONST(6),RWORK(50+4*(NNUC+1)),RTOL(NNUC+1),
 C     .                 ATOL(NNUC+1),INFORM(23),YSAVE(NNUC+1,NY2DIM),
@@ -424,8 +425,8 @@ C      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
       itrace=0
       ifail=1
       itol=1
-      rtol(1)=1.d-8
-      atol(1)=1.d-8
+      rtol(1)=1.d-9
+      atol(1)=1.d-9
 C-----Alternative to NAG library by M.O
 C      itask=4
       itask=1
@@ -433,8 +434,8 @@ C      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
 C     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C     .            d02nby,itask,itrace,ifail)
      
-      OPTIONS = SET_NORMAL_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
-     .          ABSERR=atol(1))
+      OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
+     .          ABSERR=atol(1),MXSTEP=400000)
       CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,ifail,OPTIONS)
      
       do l=1,inuc
@@ -1042,76 +1043,76 @@ C      call s18dcf(1.d0,zr7,4,'u',kz7,nz,ifail)
       endif
 C-----Calculation of Lh, and its derivatives Lhz e Lhphi
       lh=2.*zr**2/pi**2*(
-     .            real(kz1(2))*sinh1-
-     .            real(kz2(2))*sinh2/2.+
-     .            real(kz3(2))*sinh3/3.-
-     .            real(kz4(2))*sinh4/4.+
-     .            real(kz5(2))*sinh5/5.
-     .            -real(kz6(2))*sinh6/6.+
-     .            real(kz7(2))*sinh7/7.
+     .            dreal(kz1(2))*sinh1-
+     .            dreal(kz2(2))*sinh2/2.+
+     .            dreal(kz3(2))*sinh3/3.-
+     .            dreal(kz4(2))*sinh4/4.+
+     .            dreal(kz5(2))*sinh5/5.
+     .            -dreal(kz6(2))*sinh6/6.+
+     .            dreal(kz7(2))*sinh7/7.
      .                  )
       lhz=dzr*(2.*lh/zr - (zr/pi)**2*(
-     .            (real(kz1(1))+real(kz1(3)))*sinh1-
-     .            (real(kz2(1))+real(kz2(3)))*sinh2+
-     .            (real(kz3(1))+real(kz3(3)))*sinh3-
-     .            (real(kz4(1))+real(kz4(3)))*sinh4+
-     .            (real(kz5(1))+real(kz5(3)))*sinh5
-     .            -(real(kz6(1))+real(kz6(3)))*sinh6+
-     .            (real(kz7(1))+real(kz7(3)))*sinh7
+     .            (dreal(kz1(1))+dreal(kz1(3)))*sinh1-
+     .            (dreal(kz2(1))+dreal(kz2(3)))*sinh2+
+     .            (dreal(kz3(1))+dreal(kz3(3)))*sinh3-
+     .            (dreal(kz4(1))+dreal(kz4(3)))*sinh4+
+     .            (dreal(kz5(1))+dreal(kz5(3)))*sinh5
+     .            -(dreal(kz6(1))+dreal(kz6(3)))*sinh6+
+     .            (dreal(kz7(1))+dreal(kz7(3)))*sinh7
      .                  ))
       lhphi=2.*(zr/pi)**2*(
-     .            real(kz1(2))*cosh1-
-     .            real(kz2(2))*cosh2+
-     .            real(kz3(2))*cosh3-
-     .            real(kz4(2))*cosh4+
-     .            real(kz5(2))*cosh5
-     .            -real(kz6(2))*cosh6+
-     .            real(kz7(2))*cosh7
+     .            dreal(kz1(2))*cosh1-
+     .            dreal(kz2(2))*cosh2+
+     .            dreal(kz3(2))*cosh3-
+     .            dreal(kz4(2))*cosh4+
+     .            dreal(kz5(2))*cosh5
+     .            -dreal(kz6(2))*cosh6+
+     .            dreal(kz7(2))*cosh7
      .                  )
 C----------------------------Electrons----------------------------------
 C-----Compute electron energy density, pressure and energy density derivatives
       rhoeh=zr/2.*(zr/pi)**2*(
-     .            (3.*real(kz1(3))+real(kz1(1)))*cosh1-
-     .            (3.*real(kz2(3))+real(kz2(1)))*cosh2/2.+
-     .            (3.*real(kz3(3))+real(kz3(1)))*cosh3/3.-
-     .            (3.*real(kz4(3))+real(kz4(1)))*cosh4/4.+
-     .            (3.*real(kz5(3))+real(kz5(1)))*cosh5/5.
-     .            -(3.*real(kz6(3))+real(kz6(1)))*cosh6/6.+
-     .            (3.*real(kz7(3))+real(kz7(1)))*cosh7/7.
+     .            (3.*dreal(kz1(3))+dreal(kz1(1)))*cosh1-
+     .            (3.*dreal(kz2(3))+dreal(kz2(1)))*cosh2/2.+
+     .            (3.*dreal(kz3(3))+dreal(kz3(1)))*cosh3/3.-
+     .            (3.*dreal(kz4(3))+dreal(kz4(1)))*cosh4/4.+
+     .            (3.*dreal(kz5(3))+dreal(kz5(1)))*cosh5/5.
+     .            -(3.*dreal(kz6(3))+dreal(kz6(1)))*cosh6/6.+
+     .            (3.*dreal(kz7(3))+dreal(kz7(1)))*cosh7/7.
      .                  )
       peh=2.*(zr/pi)**2*(
-     .            real(kz1(2))*cosh1-
-     .            real(kz2(2))*cosh2/2.**2+
-     .            real(kz3(2))*cosh3/3.**2-
-     .            real(kz4(2))*cosh4/4.**2+
-     .            real(kz5(2))*cosh5/5.**2
-     .            -real(kz6(2))*cosh6/6.**2+
-     .            real(kz7(2))*cosh7/7.**2
+     .            dreal(kz1(2))*cosh1-
+     .            dreal(kz2(2))*cosh2/2.**2+
+     .            dreal(kz3(2))*cosh3/3.**2-
+     .            dreal(kz4(2))*cosh4/4.**2+
+     .            dreal(kz5(2))*cosh5/5.**2
+     .            -dreal(kz6(2))*cosh6/6.**2+
+     .            dreal(kz7(2))*cosh7/7.**2
      .                  )
       rhoehz=dzr*(3.*rhoeh/zr + zr/2.*(zr/pi)**2*(
-     .      ((15.*real(kz1(3))+real(kz1(1)))/zr-
-     .            4.*real(kz1(4)))*cosh1-
-     .      ((15.*real(kz2(3))+real(kz2(1)))/(2.*zr)-
-     .            4.*real(kz2(4)))*cosh2+
-     .      ((15.*real(kz3(3))+real(kz3(1)))/(3.*zr)-
-     .            4.*real(kz3(4)))*cosh3-
-     .      ((15.*real(kz4(3))+real(kz4(1)))/(4.*zr)-
-     .            4.*real(kz4(4)))*cosh4+
-     .      ((15.*real(kz5(3))+real(kz5(1)))/(5.*zr)-
-     .            4.*real(kz5(4)))*cosh5
-     .      -((15.*real(kz6(3))+real(kz6(1)))/(6.*zr)-
-     .            4.*real(kz6(4)))*cosh6+
-     .      ((15.*real(kz7(3))+real(kz7(1)))/(7.*zr)-
-     .            4.*real(kz7(4)))*cosh7
+     .      ((15.*dreal(kz1(3))+dreal(kz1(1)))/zr-
+     .            4.*dreal(kz1(4)))*cosh1-
+     .      ((15.*dreal(kz2(3))+dreal(kz2(1)))/(2.*zr)-
+     .            4.*dreal(kz2(4)))*cosh2+
+     .      ((15.*dreal(kz3(3))+dreal(kz3(1)))/(3.*zr)-
+     .            4.*dreal(kz3(4)))*cosh3-
+     .      ((15.*dreal(kz4(3))+dreal(kz4(1)))/(4.*zr)-
+     .            4.*dreal(kz4(4)))*cosh4+
+     .      ((15.*dreal(kz5(3))+dreal(kz5(1)))/(5.*zr)-
+     .            4.*dreal(kz5(4)))*cosh5
+     .      -((15.*dreal(kz6(3))+dreal(kz6(1)))/(6.*zr)-
+     .            4.*dreal(kz6(4)))*cosh6+
+     .      ((15.*dreal(kz7(3))+dreal(kz7(1)))/(7.*zr)-
+     .            4.*dreal(kz7(4)))*cosh7
      .                  ))
       rhoehphi=zr/2.*(zr/pi)**2*(
-     .            (3.*real(kz1(3))+real(kz1(1)))*sinh1-
-     .            (3.*real(kz2(3))+real(kz2(1)))*sinh2+
-     .            (3.*real(kz3(3))+real(kz3(1)))*sinh3-
-     .            (3.*real(kz4(3))+real(kz4(1)))*sinh4+
-     .            (3.*real(kz5(3))+real(kz5(1)))*sinh5
-     .            -(3.*real(kz6(3))+real(kz6(1)))*sinh6+
-     .            (3.*real(kz7(3))+real(kz7(1)))*sinh7
+     .            (3.*dreal(kz1(3))+dreal(kz1(1)))*sinh1-
+     .            (3.*dreal(kz2(3))+dreal(kz2(1)))*sinh2+
+     .            (3.*dreal(kz3(3))+dreal(kz3(1)))*sinh3-
+     .            (3.*dreal(kz4(3))+dreal(kz4(1)))*sinh4+
+     .            (3.*dreal(kz5(3))+dreal(kz5(1)))*sinh5
+     .            -(3.*dreal(kz6(3))+dreal(kz6(1)))*sinh6+
+     .            (3.*dreal(kz7(3))+dreal(kz7(1)))*sinh7
      .                  )
 C-----------------------------------------------------------------------
 

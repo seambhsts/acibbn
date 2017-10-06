@@ -6,23 +6,6 @@
     tau = 880.20   xi_e =  0.0    N_nu = 3.00   eta_f = 0.60879D-09
 
  --------------------------------------------------------------------
-  Exit DQAGI with ier =  6
-  Exit root_rc with IFAIL =        1
- ifail=           4  da bessel7
- ifail=           4  da bessel1
- ifail=           4  da bessel2
- ifail=           4  da bessel3
- ifail=           4  da bessel4
- ifail=           4  da bessel5
- ifail=           4  da bessel6
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- ifail=           4  da bessel7
- error in matrix inversion
+  Exit root_rc with lhfunnew, phi =    0.312E-16   0.650E-09
+
+  Exit DVODE_F90 with IFAIL = -1  and z =  0.28981D+01
