@@ -141,7 +141,7 @@ subroutine CBESK (Z, FNU, KODE, N, CY, NZ, IERR)
 !                 Transactions on Mathematical Software, 12 (September
 !                 1986), pp. 265-273.
 !
-!***ROUTINES CALLED  CACON, CBKNU, CBUNK, CUOIK, I1MACH, D1MACH
+!***ROUTINES CALLED  CACON, CBKNU, CBUNK, CUOIK, I1MACH, R1MACH
 !***REVISION HISTORY  (YYMMDD)
 !   830501  DATE WRITTEN
 !   890801  REVISION DATE from Version 3.2

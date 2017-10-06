@@ -861,8 +861,8 @@ C-----Bessel functions routine
 C change to kind=8
 C      COMPLEX*16       ZR1,ZR2,ZR3,ZR4,ZR5,ZR6,ZR7
 C      COMPLEX*16       KZ1(4),KZ2(4),KZ3(4),KZ4(4),KZ5(4),KZ6(4),KZ7(4)
-      COMPLEX(4) ::    ZR1,ZR2,ZR3,ZR4,ZR5,ZR6,ZR7
-      COMPLEX(4) ::    KZ1(4),KZ2(4),KZ3(4),KZ4(4),KZ5(4),KZ6(4),KZ7(4)
+      COMPLEX(8) ::    ZR1,ZR2,ZR3,ZR4,ZR5,ZR6,ZR7
+      COMPLEX(8) ::    KZ1(4),KZ2(4),KZ3(4),KZ4(4),KZ5(4),KZ6(4),KZ7(4)
       EXTERNAL         S18DCF
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
@@ -973,7 +973,7 @@ C      kzn={k1(n zr),k2(n zr),k3(n zr),k4(n zr)}
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
-      call cbesk(zr1,1.d0,1,4,kz1,nz,ifail)
+      call dbesk(zr1,1.d0,1,4,kz1,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel1'
       endif
@@ -983,7 +983,7 @@ C      call s18dcf(1.d0,zr1,4,'u',kz1,nz,ifail)
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
-      call cbesk(zr2,1.d0,1,4,kz2,nz,ifail)
+      call dbesk(zr2,1.d0,1,4,kz2,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel2'
       endif
@@ -993,7 +993,7 @@ C      call s18dcf(1.d0,zr2,4,'u',kz2,nz,ifail)
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
-      call cbesk(zr3,1.d0,1,4,kz3,nz,ifail)
+      call dbesk(zr3,1.d0,1,4,kz3,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel3'
       endif
@@ -1003,7 +1003,7 @@ C      call s18dcf(1.d0,zr3,4,'u',kz3,nz,ifail)
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
-      call cbesk(zr4,1.d0,1,4,kz4,nz,ifail)
+      call dbesk(zr4,1.d0,1,4,kz4,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel4'
       endif
@@ -1013,7 +1013,7 @@ C      call s18dcf(1.d0,zr4,4,'u',kz4,nz,ifail)
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
-      call cbesk(zr5,1.d0,1,4,kz5,nz,ifail)
+      call dbesk(zr5,1.d0,1,4,kz5,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel5'
       endif
@@ -1023,7 +1023,7 @@ C      call s18dcf(1.d0,zr5,4,'u',kz5,nz,ifail)
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
-      call cbesk(zr6,1.d0,1,4,kz6,nz,ifail)
+      call dbesk(zr6,1.d0,1,4,kz6,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel6'
       endif
@@ -1033,7 +1033,7 @@ C      call s18dcf(1.d0,zr6,4,'u',kz6,nz,ifail)
       ifail=0
 C----- Alternative to NAG library by M.O
 C      call s18dcf(1.d0,zr7,4,'u',kz7,nz,ifail)
-      call cbesk(zr7,1.d0,1,4,kz7,nz,ifail)
+      call dbesk(zr7,1.d0,1,4,kz7,nz,ifail)
       if (ifail.ne.0) then
         write(2,*) 'ifail=', ifail,' da bessel7'
       endif
