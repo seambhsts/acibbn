@@ -428,8 +428,8 @@ C      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
       itrace=0
       ifail=1
       itol=1
-      rtol(1)=1.d-9
-      atol(1)=1.d-9
+      rtol(1)=1.d-8
+      atol(1)=1.d-8
 C-----Alternative to NAG library by M.O
 C      itask=4
       itask=1
@@ -440,9 +440,9 @@ C     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C     .            d02nby,itask,itrace,ifail)
      
       OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
-     .          ABSERR=atol(1),MXSTEP=100000)
+     .          ABSERR=atol(1),MXSTEP=500000)
      
-      Do IOUT = 1, 13
+C      Do IOUT = 1, 13
       CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,istate,OPTIONS)
       CALL GET_STATS(RSTATS,ISTATS,NG,JROOT)
       WRITE (2,90003) z, yy(1), yy(2), yy(3)
@@ -450,7 +450,7 @@ C     .            d02nby,itask,itrace,ifail)
       do l=1,inuc
         if (yy(l+1).lt.ymin) then
            yy(l+1)=ymin
-           IERROR = 1
+C           IERROR = 1
         end if
       enddo
         IF (ISTATE<0) THEN
@@ -458,7 +458,7 @@ C     .            d02nby,itask,itrace,ifail)
           STOP
         END IF
         znext=znext*iout
-      end do
+C      end do
       
       IF (IERROR==1) THEN
         WRITE (6,90001)
@@ -469,7 +469,7 @@ C     .            d02nby,itask,itrace,ifail)
 C-----Write details about resolution of differential equations
 C-----Alternative to NAG library by M.O
 C      if (ifail.eq.0) then
-      if (ifail.eq.2) then
+      if (istate.eq.2) then
       
         call outend(zend,yy)
 C-----Alternative to NAG library by M.O
@@ -478,24 +478,34 @@ C     .              nje,nqu,nq,niter,imxer,algequ,inform,ifail)
         write(2,*)
         write(2,*) '------------------------------------------',
      .            '--------------------------'
+C-----Alternative to NAG library by M.O
         write(2,*)
         write(2,9996) 'relative tolerance   = ',rtol(1)
         write(2,9996) 'absolute tolerance   = ',atol(1)
         write(2,9997) 'method               = ',method
         write(2,9996) 'initial step         = ',dz0
-        write(2,9996) 'last step used       = ',hu
-        write(2,9996) 'next step to be used = ',h
-        write(2,9996) 'z current            = ',tcur
+C        write(2,9996) 'last step used       = ',hu
+        write(2,9996) 'last step used       = ',RSTATS(11) 
+C        write(2,9996) 'next step to be used = ',h
+        write(2,9996) 'next step to be used = ',RSTATS(12)
+C        write(2,9996) 'z current            = ',tcur
+        write(2,9996) 'z current            = ',RSTATS(13)
         write(2,*)
-        write(2,9998) '# of steps           = ',nst
-        write(2,9998) '# of FCN calls       = ',nre
-        write(2,9998) '# of JAC calls       = ',nje
+C        write(2,9998) '# of steps           = ',nst
+        write(2,9998) '# of steps           = ',ISTATS(11)
+C        write(2,9998) '# of FCN calls       = ',nre
+        write(2,9998) '# of FCN calls       = ',ISTATS(12)
+C        write(2,9998) '# of JAC calls       = ',nje
+        write(2,9998) '# of JAC calls       = ',ISTATS(13)
         write(2,*)
-        write(2,9998) 'last meth ord        = ',nqu
-        write(2,9998) 'next meth ord        = ',nq
+C        write(2,9998) 'last meth ord        = ',nqu
+        write(2,9998) 'last meth ord        = ',ISTATS(14)
+C        write(2,9998) 'next meth ord        = ',nq
+        write(2,9998) 'next meth ord        = ',ISTATS(15)
         write(2,9998) 'non lin solv calls   = ',niter
         write(2,*)
-        write(2,9998) 'max err comp         = ',imxer
+C        write(2,9998) 'max err comp         = ',imxer
+        write(2,9998) 'max err comp         = ',ISTATS(16)
         write(2,*)
         write(2,*) '------------------------------------------',
      .            '--------------------------'
