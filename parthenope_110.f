@@ -367,7 +367,6 @@ C      LOGICAL          PETZLD,ALGEQU(NNUC+1)
       LOGICAL          PETZLD
       PARAMETER        (PETZLD=.TRUE.)
       PARAMETER        (HMIN=0.D0,HMAX=0.D0,H0=0.D0)
-      INTEGER          MXSTEP
 C-----Alternative NAG library by M.O
 C      DIMENSION        CONST(6),RWORK(50+4*(NNUC+1)),RTOL(NNUC+1),
 C     .                 ATOL(NNUC+1),INFORM(23),YSAVE(NNUC+1,NY2DIM),
@@ -380,7 +379,11 @@ C-----Print output
       EXTERNAL         OUTEND
 C-----Alternative NAG library by M.O
       TYPE(VODE_OPTS) :: OPTIONS
-
+      REAL(8), DIMENSION(22) :: RSTATS
+      INTEGER, DIMENSION(22) :: ISTATS
+      INTEGER :: NG, IOUT,IERROR,MXSTEP,ISTATE
+      INTEGER, DIMENSION(2) :: JROOT
+      REAL(8) :: znext
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
       EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -430,17 +433,38 @@ C      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
 C-----Alternative to NAG library by M.O
 C      itask=4
       itask=1
+      istate=1
+      znext=zin+zin/10.d0
 C      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
 C     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C     .            d02nby,itask,itrace,ifail)
      
       OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
-     .          ABSERR=atol(1),MXSTEP=400000)
-      CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,ifail,OPTIONS)
+     .          ABSERR=atol(1),MXSTEP=100000)
      
+      Do IOUT = 1, 13
+      CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,istate,OPTIONS)
+      CALL GET_STATS(RSTATS,ISTATS,NG,JROOT)
+      WRITE (2,90003) z, yy(1), yy(2), yy(3)
+      
       do l=1,inuc
-        if (yy(l+1).lt.ymin) yy(l+1)=ymin
+        if (yy(l+1).lt.ymin) then
+           yy(l+1)=ymin
+           IERROR = 1
+        end if
       enddo
+        IF (ISTATE<0) THEN
+          WRITE (2,90004) ISTATE
+          STOP
+        END IF
+        znext=znext*iout
+      end do
+      
+      IF (IERROR==1) THEN
+        WRITE (6,90001)
+      ELSE
+        WRITE (6,90002)
+      END IF
 
 C-----Write details about resolution of differential equations
 C-----Alternative to NAG library by M.O
@@ -477,9 +501,16 @@ C     .              nje,nqu,nq,niter,imxer,algequ,inform,ifail)
      .            '--------------------------'
       else
         write(2,*)
-        write(2,9999) 'Exit DVODE_F90 with IFAIL = ',ifail,
+        write(2,9999) 'Exit DVODE_F90 with istate = ',istate,
      .            '  and z = ',z
       endif
+      
+90001 FORMAT (/' An error occurred.')
+90002 FORMAT (/' No errors occurred.')
+90003 FORMAT (' At t =',D12.4,'   y =',3D14.6)
+90004 FORMAT (///' Error halt: ISTATE =',I3)
+
+
       close(2)
       close(3)
 
@@ -801,7 +832,7 @@ C-----Solve equations to get derivatives
       iconv=30
       call eqslin(iconv,ierror)
       if (mbad.ne.0) then
-        write(2,*) 'error in matrix inversion'
+        write(2,*) 'error in matrix inversion', iconv
         stop
       endif
 
