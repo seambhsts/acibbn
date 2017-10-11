@@ -383,7 +383,6 @@ C-----Alternative NAG library by M.O
       INTEGER, DIMENSION(22) :: ISTATS
       INTEGER :: NG, IOUT,IERROR,MXSTEP,ISTATE
       INTEGER, DIMENSION(2) :: JROOT
-      REAL(8) :: znext
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
       EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -428,8 +427,8 @@ C      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
       itrace=0
       ifail=1
       itol=1
-      rtol(1)=1.d-8
-      atol(1)=1.d-8
+      rtol(1)=1.d-9
+      atol(1)=1.d-9
 C-----Alternative to NAG library by M.O
 C      itask=4
       itask=1
@@ -440,12 +439,12 @@ C     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C     .            d02nby,itask,itrace,ifail)
      
       OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
-     .          ABSERR=atol(1),MXSTEP=500000)
+     .          ABSERR=atol(1),MXSTEP=10**8)
      
 C      Do IOUT = 1, 13
       CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,istate,OPTIONS)
       CALL GET_STATS(RSTATS,ISTATS,NG,JROOT)
-      WRITE (2,90003) z, yy(1), yy(2), yy(3)
+      WRITE (2,90003) z, yy(1), yy(2), yy(6)
       
       do l=1,inuc
         if (yy(l+1).lt.ymin) then
@@ -460,12 +459,6 @@ C           IERROR = 1
         znext=znext*iout
 C      end do
       
-      IF (IERROR==1) THEN
-        WRITE (6,90001)
-      ELSE
-        WRITE (6,90002)
-      END IF
-
 C-----Write details about resolution of differential equations
 C-----Alternative to NAG library by M.O
 C      if (ifail.eq.0) then
@@ -515,8 +508,6 @@ C        write(2,9998) 'max err comp         = ',imxer
      .            '  and z = ',z
       endif
       
-90001 FORMAT (/' An error occurred.')
-90002 FORMAT (/' No errors occurred.')
 90003 FORMAT (' At t =',D12.4,'   y =',3D14.6)
 90004 FORMAT (///' Error halt: ISTATE =',I3)
 
