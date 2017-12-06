@@ -326,8 +326,7 @@ C
 C=======================================================================
       SUBROUTINE PARTHENOPE(ETAF0,DNNU0,TAU0,IXIE0,RHOLMBD0)
 C-----Altenative to NAG library
-      USE DVODE_F90_M
-      
+      USE DVODE_F90_M      
 Cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C      This subroutine drives the resolution of the BBN set of equations
 C
@@ -354,8 +353,8 @@ C-----Physical parameters
       INTEGER          IXIE0
 C-----Differential equation resolution parameters
 C-----Alternative NAG library by M.O
-C      INTEGER          IFAIL,NY2DIM,MAXORD,MAXSTP,MXHNIL,NWKJAC,ITRACE,
-C     .                 ITOL,INFORM,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
+C!      INTEGER          IFAIL,NY2DIM,MAXORD,MAXSTP,MXHNIL,NWKJAC,ITRACE,
+C!     .                 ITOL,INFORM,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
       INTEGER          IFAIL,NY2DIM,MAXORD,MAXSTP,MXHNIL,NWKJAC,ITRACE,
      .                 ITOL,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
       PARAMETER        (MAXORD=5,NY2DIM=MAXORD+1,MAXSTP=0,MXHNIL=0,
@@ -363,14 +362,14 @@ C     .                 ITOL,INFORM,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
       CHARACTER*1      METHOD,NORM,JCEVAL
       PARAMETER        (METHOD='n',NORM='a',JCEVAL='n')
 C-----Alternative NAG library by M.O
-C      LOGICAL          PETZLD,ALGEQU(NNUC+1)
+C!      LOGICAL          PETZLD,ALGEQU(NNUC+1)
       LOGICAL          PETZLD
       PARAMETER        (PETZLD=.TRUE.)
       PARAMETER        (HMIN=0.D0,HMAX=0.D0,H0=0.D0)
 C-----Alternative NAG library by M.O
-C      DIMENSION        CONST(6),RWORK(50+4*(NNUC+1)),RTOL(NNUC+1),
-C     .                 ATOL(NNUC+1),INFORM(23),YSAVE(NNUC+1,NY2DIM),
-C     .                 WKJAC(NWKJAC)
+C!      DIMENSION        CONST(6),RWORK(50+4*(NNUC+1)),RTOL(NNUC+1),
+C!     .                 ATOL(NNUC+1),INFORM(23),YSAVE(NNUC+1,NY2DIM),
+C!     .                 WKJAC(NWKJAC)
 C      DIMENSION        YY(NNUC+1),YYPRIME(NNUC+1)
       DIMENSION        CONST(6),RTOL(NNUC+1), ATOL(NNUC+1)
       DIMENSION        YY(NNUC+1)
@@ -421,27 +420,27 @@ C      (D02NBF) NAG subroutines
       enddo
       ifail=0
 C-----Alternative to NAG library by M.O
-C      call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
-C     .            hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
-C      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
+C!      call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
+C!     .            hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
+C!      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
       itrace=0
       ifail=1
       itol=1
       rtol(1)=1.d-9
       atol(1)=1.d-9
 C-----Alternative to NAG library by M.O
-C      itask=4
+C!      itask=4
       itask=1
       istate=1
       znext=zin+zin/10.d0
-C      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
-C     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
-C     .            d02nby,itask,itrace,ifail)
-     
+C!      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
+C!     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
+C!     .            d02nby,itask,itrace,ifail)
+C     
       OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
      .          ABSERR=atol(1),MXSTEP=10**8)
      
-C      Do IOUT = 1, 13
+C!      Do IOUT = 1, 13
       CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,istate,OPTIONS)
       CALL GET_STATS(RSTATS,ISTATS,NG,JROOT)
       WRITE (2,90003) z, yy(1), yy(2), yy(6)
@@ -449,7 +448,7 @@ C      Do IOUT = 1, 13
       do l=1,inuc
         if (yy(l+1).lt.ymin) then
            yy(l+1)=ymin
-C           IERROR = 1
+C!           IERROR = 1
         end if
       enddo
         IF (ISTATE<0) THEN
@@ -457,17 +456,17 @@ C           IERROR = 1
           STOP
         END IF
         znext=znext*iout
-C      end do
+C!      end do
       
 C-----Write details about resolution of differential equations
 C-----Alternative to NAG library by M.O
-C      if (ifail.eq.0) then
+C!      if (ifail.eq.0) then
       if (istate.eq.2) then
       
         call outend(zend,yy)
 C-----Alternative to NAG library by M.O
-C        call d02nyf(inuc+1,inuc+1,hu,h,tcur,tolsf,rwork,nst,nre,
-C     .              nje,nqu,nq,niter,imxer,algequ,inform,ifail)
+C!        call d02nyf(inuc+1,inuc+1,hu,h,tcur,tolsf,rwork,nst,nre,
+C!     .              nje,nqu,nq,niter,imxer,algequ,inform,ifail)
         write(2,*)
         write(2,*) '------------------------------------------',
      .            '--------------------------'
@@ -477,27 +476,27 @@ C-----Alternative to NAG library by M.O
         write(2,9996) 'absolute tolerance   = ',atol(1)
         write(2,9997) 'method               = ',method
         write(2,9996) 'initial step         = ',dz0
-C        write(2,9996) 'last step used       = ',hu
+C!        write(2,9996) 'last step used       = ',hu
         write(2,9996) 'last step used       = ',RSTATS(11) 
-C        write(2,9996) 'next step to be used = ',h
+C!        write(2,9996) 'next step to be used = ',h
         write(2,9996) 'next step to be used = ',RSTATS(12)
-C        write(2,9996) 'z current            = ',tcur
+C!        write(2,9996) 'z current            = ',tcur
         write(2,9996) 'z current            = ',RSTATS(13)
         write(2,*)
-C        write(2,9998) '# of steps           = ',nst
+C!        write(2,9998) '# of steps           = ',nst
         write(2,9998) '# of steps           = ',ISTATS(11)
-C        write(2,9998) '# of FCN calls       = ',nre
+!        write(2,9998) '# of FCN calls       = ',nre
         write(2,9998) '# of FCN calls       = ',ISTATS(12)
-C        write(2,9998) '# of JAC calls       = ',nje
+C!        write(2,9998) '# of JAC calls       = ',nje
         write(2,9998) '# of JAC calls       = ',ISTATS(13)
         write(2,*)
-C        write(2,9998) 'last meth ord        = ',nqu
+C!        write(2,9998) 'last meth ord        = ',nqu
         write(2,9998) 'last meth ord        = ',ISTATS(14)
-C        write(2,9998) 'next meth ord        = ',nq
+C!        write(2,9998) 'next meth ord        = ',nq
         write(2,9998) 'next meth ord        = ',ISTATS(15)
         write(2,9998) 'non lin solv calls   = ',niter
         write(2,*)
-C        write(2,9998) 'max err comp         = ',imxer
+C!        write(2,9998) 'max err comp         = ',imxer
         write(2,9998) 'max err comp         = ',ISTATS(16)
         write(2,*)
         write(2,*) '------------------------------------------',
@@ -524,7 +523,8 @@ C        write(2,9998) 'max err comp         = ',imxer
       END
 
 
-      SUBROUTINE FCN(NEQ,Z,YY,YYPRIME,IRES)
+!      SUBROUTINE FCN(NEQ,Z,YY,YYPRIME,IRES)
+      SUBROUTINE FCN(NEQ,Z,YY,YYPRIME)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C      This subroutine evaluates the right hand side of the BBN
 C        differential equations
@@ -643,10 +643,13 @@ C-----Counters increment
         chstep=.true.
       endif
 C-----Store the current values of nuclide abundances in the output files
-      if (ifcn.eq.isave1) then
+!      if (ifcn.eq.isave1) then Dbug M.O
+      if (ifcn.eq.2*isave1) then
         ifcn=0
         ifcn1=ifcn1+1
-        call outevol(z,yy)
+        ! Dbug M.O
+        !call outevol(z,yy)
+        write(*,*) dz, z, yy(6), sumy
       endif
 
 C-----Compute the value of the stepsize dz
@@ -2611,9 +2614,9 @@ C--------------------------Local variables------------------------------
       INTEGER          LW,LIW
       PARAMETER        (LW=800,LIW=LW/4)
 C-----Alternative to NAG library by M.O
-C      INTEGER          IFAIL,IW(LIW)
-C      DIMENSION        W(LW)
-C      EXTERNAL         D01AMF,INTLHFUN
+C!      INTEGER          IFAIL,IW(LIW)
+C!      DIMENSION        W(LW)
+C!      EXTERNAL         D01AMF,INTLHFUN
       EXTERNAL         DQAGI,INTLHFUN
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
@@ -2645,9 +2648,9 @@ C-----Precision of integrations
       epsrel=1.d-6
       
 C-----Alternative to NAG library by M.O
-C      ifail=0
-C      call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
-C     .            liw,ifail)
+C!      ifail=0
+C!      call d01amf(intlhfun,zr,1,epsabs,epsrel,lhfun,err,w,lw,iw,
+C!     .            liw,ifail)
       call dqagi(intlhfun,zr,1,epsabs,epsrel,lhfun,abserr,neval,
      . ier,limit,llenw,last,iiwork, wwork)
        if (ier.gt.0) then
@@ -2762,7 +2765,7 @@ C      chemical potential
       DATA             EPS/1.D-13/
       DATA             ETA/0.D0/
 C-----Alternative NAG library by M.O
-C      EXTERNAL         C05AGF,LHFUN
+C!      EXTERNAL         C05AGF,LHFUN
       EXTERNAL         ROOT_RC,LHFUN
 C--------------------------Common variables-----------------------------
       INTEGER          AA(NNUC)
@@ -3052,7 +3055,7 @@ C      the electron chemical potential and the remaining yy(i) to the nuclide
 C      abundances
 C-----Mass difference between neutron and proton in MeV
 C Dbug by M.O
-C      q=mn-mp
+C!      q=mn-mp
       qdif=mn-mp
       yy0(2)=1.d0/(1.d0+ex(qdif/me*zin+xie))
       yy0(3)=1.d0/(1.d0+ex(-qdif/me*zin-xie))
@@ -3077,7 +3080,7 @@ C      with Lh0=2 zeta(3) sumzy0/pi^2 2.75 etaf
       phi=1.d-8
       ifail=1
 C-----Alternative to NGA library by M.O
-C      call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
+C!      call c05agf(phi,range,eps,eta,lhfun,ain,bin,ifail)
 !
 !  Initialization.
 !
@@ -3129,7 +3132,7 @@ C-----Inizialization of the counters
 1004      format(//1x,'Making the evolution'//)
 
 C-----Alternative to NAG Library by M.O
-C 9998      format(2x,a,i8)
+C! 9998      format(2x,a,i8)
 9998      format(2x,a,2e12.3)
 
       RETURN

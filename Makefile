@@ -7,7 +7,7 @@
 
 FC	= gfortran
 #FFLAGS	= -Ofast
-FFLAGS  = -g -Wall -fbacktrace -ffpe-trap=zero,overflow,underflow -fno-automatic -fno-second-underscore -fno-range-check
+FFLAGS  = -g -Wall -fbacktrace -ffpe-trap=zero,overflow,underflow -fno-automatic -fno-second-underscore -fno-range-check #-freal-8-real-1
 #FFLAGS  = -g -Wall -fno-automatic -fno-second-underscore -fno-range-check
 #FFLAGS  = -Wall -framework Accelerate -mtune=corei7 -march=native -flto -fno-automatic -fno-second-underscore -fno-range-check -m64 -lpthread -O2
 
