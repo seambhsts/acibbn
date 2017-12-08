@@ -426,8 +426,8 @@ C!      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
       itrace=0
       ifail=1
       itol=1
-      rtol(1)=1.d-9
-      atol(1)=1.d-9
+      rtol(1)=1.d-7
+      atol(1)=1.d-16
 C-----Alternative to NAG library by M.O
 C!      itask=4
       itask=1
@@ -649,7 +649,7 @@ C-----Store the current values of nuclide abundances in the output files
         ifcn1=ifcn1+1
         ! Dbug M.O
         !call outevol(z,yy)
-        write(*,*) dz, z, yy(6), sumy
+        write(*,*) dz, z, yy(2), yy(3)
       endif
 
 C-----Compute the value of the stepsize dz
