@@ -350,35 +350,32 @@ C-----Network parameters
 C-----Physical parameters
       INTEGER          IXIE0
 C-----Differential equation resolution parameters
-C-----Alternative NAG library by M.O
-C!      INTEGER          IFAIL,NY2DIM,MAXORD,MAXSTP,MXHNIL,NWKJAC,ITRACE,
-C!     .                 ITOL,INFORM,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
       INTEGER          IFAIL,NY2DIM,MAXORD,MAXSTP,MXHNIL,NWKJAC,ITRACE,
-     .                 ITOL,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
+     .                 ITOL,INFORM,ITASK,NST,NRE,NJE,NQU,NQ,NITER,IMXER
       PARAMETER        (MAXORD=5,NY2DIM=MAXORD+1,MAXSTP=0,MXHNIL=0,
      .                 NWKJAC=(NNUC+1)*(NNUC+1+1))
       CHARACTER*1      METHOD,NORM,JCEVAL
       PARAMETER        (METHOD='n',NORM='a',JCEVAL='n')
-C-----Alternative NAG library by M.O
-C!      LOGICAL          PETZLD,ALGEQU(NNUC+1)
-      LOGICAL          PETZLD
+      LOGICAL          PETZLD,ALGEQU(NNUC+1)
       PARAMETER        (PETZLD=.TRUE.)
       PARAMETER        (HMIN=0.D0,HMAX=0.D0,H0=0.D0)
-C-----Alternative NAG library by M.O
 C!      DIMENSION        CONST(6),RWORK(50+4*(NNUC+1)),RTOL(NNUC+1),
 C!     .                 ATOL(NNUC+1),INFORM(23),YSAVE(NNUC+1,NY2DIM),
 C!     .                 WKJAC(NWKJAC)
-C      DIMENSION        YY(NNUC+1),YYPRIME(NNUC+1)
-      DIMENSION        CONST(6),RTOL(NNUC+1), ATOL(NNUC+1)
-      DIMENSION        YY(NNUC+1)
+      DIMENSION        CONST(6),RWORK(50+4*(NNUC+1)),
+     .                 INFORM(23),YSAVE(NNUC+1,NY2DIM),
+     .                 WKJAC(NWKJAC)
+      DIMENSION        YY(NNUC+1),YYPRIME(NNUC+1)
       EXTERNAL         D02NVF,D02NSF,D02NBF,D02NBZ,D02NBY,D02NYF,FCN
-C-----Print output
-      EXTERNAL         OUTEND
 C-----Alternative NAG library by M.O
-      REAL(8), DIMENSION(22) :: RSTATS
+      Real(8) :: H
       INTEGER, DIMENSION(22) :: ISTATS
-      INTEGER :: NG, IOUT,IERROR,MXSTEP,ISTATE
-      INTEGER, DIMENSION(2) :: JROOT
+      INTEGER :: IFCN, IJAC, MLJAC, MUJAC, IDFX, IMAS, MLMAS, MUMAS, 
+     .           IOUT
+      Integer, Parameter :: LWORK = 2500, 
+     .                     LIWORK = 30
+      REAL(8), DIMENSION(LWORK) :: WORK
+      INTEGER, DIMENSION(LIWORK) :: IWORK
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
       EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -420,21 +417,26 @@ C-----Alternative to NAG library by M.O
 C!      call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
 C!     .            hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
 C!      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
-      itrace=0
-      ifail=1
-      itol=1
-      rtol(1)=1.d-7
-      atol(1)=1.d-16
+C
+      H = H0
+      IFCN = 1
+      ITOL = 0
+      rtol=1.d-5
+      atol=1.d-14
+      IJAC = 0
+      MLJAC = NNUC+1
+      IDFX = 0
+      IMAS = 0
+      IOUT = 0
+      IWORK(1) = 100000
+      
 C-----Alternative to NAG library by M.O
 C!      itask=4
-      itask=1
-      istate=1
-      znext=zin+zin/10.d0
 C!      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
 C!     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C!     .            d02nby,itask,itrace,ifail)
 C     
-      CALL ROS4(N,IFCN,X,Y,XEND,H,
+      CALL ROS4(NNUC+1,IFCN,Z,YY,ZEND,H,
      .     RTOL,ATOL,ITOL,
      .     JAC ,IJAC,MLJAC,MUJAC,DFX,IDFX,
      .     MAS ,IMAS,MLMAS,MUMAS,
@@ -470,39 +472,28 @@ C!     .              nje,nqu,nq,niter,imxer,algequ,inform,ifail)
      .            '--------------------------'
 C-----Alternative to NAG library by M.O
         write(2,*)
-        write(2,9996) 'relative tolerance   = ',rtol(1)
-        write(2,9996) 'absolute tolerance   = ',atol(1)
+        write(2,9996) 'relative tolerance   = ',rtol
+        write(2,9996) 'absolute tolerance   = ',atol
         write(2,9997) 'method               = ',method
         write(2,9996) 'initial step         = ',dz0
 C!        write(2,9996) 'last step used       = ',hu
-        write(2,9996) 'last step used       = ',RSTATS(11) 
 C!        write(2,9996) 'next step to be used = ',h
-        write(2,9996) 'next step to be used = ',RSTATS(12)
 C!        write(2,9996) 'z current            = ',tcur
-        write(2,9996) 'z current            = ',RSTATS(13)
-        write(2,*)
 C!        write(2,9998) '# of steps           = ',nst
-        write(2,9998) '# of steps           = ',ISTATS(11)
 !        write(2,9998) '# of FCN calls       = ',nre
-        write(2,9998) '# of FCN calls       = ',ISTATS(12)
 C!        write(2,9998) '# of JAC calls       = ',nje
-        write(2,9998) '# of JAC calls       = ',ISTATS(13)
-        write(2,*)
 C!        write(2,9998) 'last meth ord        = ',nqu
-        write(2,9998) 'last meth ord        = ',ISTATS(14)
 C!        write(2,9998) 'next meth ord        = ',nq
-        write(2,9998) 'next meth ord        = ',ISTATS(15)
         write(2,9998) 'non lin solv calls   = ',niter
         write(2,*)
 C!        write(2,9998) 'max err comp         = ',imxer
-        write(2,9998) 'max err comp         = ',ISTATS(16)
         write(2,*)
         write(2,*) '------------------------------------------',
      .            '--------------------------'
       else
         write(2,*)
-        write(2,9999) 'Exit DVODE_F90 with istate = ',istate,
-     .            '  and z = ',z
+C        write(2,9999) 'Exit DVODE_F90 with istate = ',istate,
+C     .            '  and z = ',z
       endif
       
 90003 FORMAT (' At t =',D12.4,'   y =',3D14.6)
@@ -642,7 +633,7 @@ C-----Counters increment
       endif
 C-----Store the current values of nuclide abundances in the output files
 !      if (ifcn.eq.isave1) then Dbug M.O
-      if (ifcn.eq.2*isave1) then
+      if (ifcn.eq.10*isave1) then
         ifcn=0
         ifcn1=ifcn1+1
         ! Dbug M.O

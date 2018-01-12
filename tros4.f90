@@ -581,7 +581,7 @@ SUBROUTINE ROS4(N,IFCN,X,Y,XEND,H,               &
 ! ----------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
       REAL*8 Y(N),YNEW(N),DY1(N),DY(N),AK1(N), &
-	    AK2(N),AK3(N),AK4(N),FX(N),            &
+             AK2(N),AK3(N),AK4(N),FX(N),  H,          &
         FJAC(LFJAC,N),E(LE,N),FMAS(LDMAS,N),ATOL(1),RTOL(1)
       INTEGER IP(N)
       LOGICAL REJECT,RJECT2,AUTNMS,IMPLCT,BANDED
@@ -617,8 +617,8 @@ SUBROUTINE ROS4(N,IFCN,X,Y,XEND,H,               &
                 B1,B2,B3,B4,E1,E2,E3,E4,GAMMA,C2,C3,D1,D2,D3,D4)
 
 ! --- INITIAL PREPARATIONS
-      HMAXN=DMIN1(DABS(HMAX),DABS(XEND-X))
-      H=DMIN1(DMAX1(1.D-10,DABS(H)),HMAXN)
+      HMAXN=MIN(ABS(HMAX),ABS(XEND-X))
+      H=MIN(DMAX1(1.D-10,DABS(H)),HMAXN)
       H=DSIGN(H,POSNEG)
       REJECT=.FALSE.
       NSING=0
