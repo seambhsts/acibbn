@@ -325,8 +325,6 @@ C  ZZ(NNUC)         = Nuclide atomic charges
 C
 C=======================================================================
       SUBROUTINE PARTHENOPE(ETAF0,DNNU0,TAU0,IXIE0,RHOLMBD0)
-C-----Altenative to NAG library
-      USE DVODE_F90_M      
 Cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C      This subroutine drives the resolution of the BBN set of equations
 C
@@ -377,7 +375,6 @@ C      DIMENSION        YY(NNUC+1),YYPRIME(NNUC+1)
 C-----Print output
       EXTERNAL         OUTEND
 C-----Alternative NAG library by M.O
-      TYPE(VODE_OPTS) :: OPTIONS
       REAL(8), DIMENSION(22) :: RSTATS
       INTEGER, DIMENSION(22) :: ISTATS
       INTEGER :: NG, IOUT,IERROR,MXSTEP,ISTATE
@@ -437,12 +434,13 @@ C!      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
 C!     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C!     .            d02nby,itask,itrace,ifail)
 C     
-      OPTIONS = SET_OPTS(DENSE_J=.TRUE.,RELERR=rtol(1),
-     .          ABSERR=atol(1),MXSTEP=10**8)
-     
-C!      Do IOUT = 1, 13
-      CALL DVODE_F90(fcn,inuc+1,yy,z,zend,itask,istate,OPTIONS)
-      CALL GET_STATS(RSTATS,ISTATS,NG,JROOT)
+      CALL ROS4(N,IFCN,X,Y,XEND,H,
+     .     RTOL,ATOL,ITOL,
+     .     JAC ,IJAC,MLJAC,MUJAC,DFX,IDFX,
+     .     MAS ,IMAS,MLMAS,MUMAS,
+     .     SOLOUT,IOUT,
+     .     WORK,LWORK,IWORK,LIWORK,IDID)
+
       WRITE (2,90003) z, yy(1), yy(2), yy(6)
       
       do l=1,inuc
