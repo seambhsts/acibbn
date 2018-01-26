@@ -368,14 +368,9 @@ C!     .                 WKJAC(NWKJAC)
       DIMENSION        YY(NNUC+1),YYPRIME(NNUC+1)
       EXTERNAL         D02NVF,D02NSF,D02NBF,D02NBZ,D02NBY,D02NYF,FCN
 C-----Alternative NAG library by M.O
-      Real(8) :: H
-      INTEGER, DIMENSION(22) :: ISTATS
-      INTEGER :: IFCN, IJAC, MLJAC, MUJAC, IDFX, IMAS, MLMAS, MUMAS, 
-     .           IOUT
-      Integer, Parameter :: LWORK = 2500, 
-     .                     LIWORK = 30
-      REAL(8), DIMENSION(LWORK) :: WORK
-      INTEGER, DIMENSION(LIWORK) :: IWORK
+      Real(8) :: H, epsabs, epsrel
+      INTEGER :: BSPN, aufrufe, fehler, fmax
+      
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
       EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -418,17 +413,11 @@ C!      call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
 C!     .            hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
 C!      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
 C
-      H = H0
-      IFCN = 1
-      ITOL = 0
-      rtol=1.d-5
-      atol=1.d-14
-      IJAC = 0
-      MLJAC = NNUC+1
-      IDFX = 0
-      IMAS = 0
-      IOUT = 0
-      IWORK(1) = 100000
+      H = 1.d-10
+      bspn = 10
+      epsrel=1.d-5
+      epsabs=1.d-10
+      fmax = 600000
       
 C-----Alternative to NAG library by M.O
 C!      itask=4
@@ -436,12 +425,8 @@ C!      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
 C!     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C!     .            d02nby,itask,itrace,ifail)
 C     
-      CALL ROS4(NNUC+1,IFCN,Z,YY,ZEND,H,
-     .     RTOL,ATOL,ITOL,
-     .     JAC ,IJAC,MLJAC,MUJAC,DFX,IDFX,
-     .     MAS ,IMAS,MLMAS,MUMAS,
-     .     SOLOUT,IOUT,
-     .     WORK,LWORK,IWORK,LIWORK,IDID)
+      CALL gear4(z,zend,bspn,nnuc+1,yy,
+     .           epsabs,epsrel,h,fmax,aufrufe,fehler)
 
       WRITE (2,90003) z, yy(1), yy(2), yy(6)
       
@@ -451,8 +436,9 @@ C
 C!           IERROR = 1
         end if
       enddo
-        IF (ISTATE<0) THEN
-          WRITE (2,90004) ISTATE
+        IF (fehler .ne. 0) THEN
+          write(*,*) fehler
+          WRITE (2,90004) fehler
           STOP
         END IF
         znext=znext*iout
@@ -461,7 +447,7 @@ C!      end do
 C-----Write details about resolution of differential equations
 C-----Alternative to NAG library by M.O
 C!      if (ifail.eq.0) then
-      if (istate.eq.2) then
+      if (fehler.eq.0) then
       
         call outend(zend,yy)
 C-----Alternative to NAG library by M.O
@@ -512,8 +498,9 @@ C     .            '  and z = ',z
       END
 
 
+!-----Alternative to NAG library by M.O
 !      SUBROUTINE FCN(NEQ,Z,YY,YYPRIME,IRES)
-      SUBROUTINE FCN(NEQ,Z,YY,YYPRIME)
+      SUBROUTINE DGL(nspn,NEQ,Z,YY,YYPRIME)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C      This subroutine evaluates the right hand side of the BBN
 C        differential equations
@@ -555,6 +542,9 @@ C-----Thermodynamical quantities calculation
       EXTERNAL         THERMO
 C-----Output parameters
       EXTERNAL         OUTEVOL
+C
+!-----Alternative to NAG library by M.O
+      Integer :: bspn
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
       EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
