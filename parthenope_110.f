@@ -417,7 +417,7 @@ C
       bspn = 10
       epsrel=1.d-5
       epsabs=1.d-10
-      fmax = 600000
+      fmax = 6000000
       
 C-----Alternative to NAG library by M.O
 C!      itask=4
@@ -628,7 +628,7 @@ C-----Store the current values of nuclide abundances in the output files
         ifcn1=ifcn1+1
         ! Dbug M.O
         !call outevol(z,yy)
-        write(*,*) dz, z, yy(2), yy(3)
+        write(*,*) dz, z, yy(2), yy(6)
       endif
 
 C-----Compute the value of the stepsize dz
@@ -1208,7 +1208,9 @@ C-----Matrix inversion
       INTEGER          MORD               !Higher order in correction
       PARAMETER        (MORD=1)
       INTEGER          NORD               !Order of correction
-      PARAMETER        (EPS=2.D-4)        !Tolerance for convergence (.ge.1.d-7)
+      ! Dbug M.O
+C      PARAMETER        (EPS=2.D-4)        !Tolerance for convergence (.ge.1.d-7)
+      PARAMETER        (EPS=1.D-3)        !Tolerance for convergence (.ge.1.d-7)
 C--------------------------Common variables-----------------------------
       INTEGER          MBAD
       INTEGER          INC
