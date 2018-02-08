@@ -439,7 +439,7 @@ C!     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C!     .            d02nby,itask,itrace,ifail)
 C
       iwork(1) = 10000000
-      iwork(2) = 1
+      iwork(2) = 5
       CALL rowmap(NNUC+1,FCN,ifcn,Z,yyprime,zend,hs,rtol,atol,itol,
      1                  jacv,ijacv,fdt,ifdt,solout,iout,work,
      2                  lwork,iwork,liwork,rpar,ipar,idid)
@@ -452,11 +452,6 @@ C
 C!           IERROR = 1
         end if
       enddo
-        IF (fehler .ne. 0) THEN
-          write(*,*) fehler
-          WRITE (2,90004) fehler
-          STOP
-        END IF
 C!      end do
       
 C-----Write details about resolution of differential equations
@@ -475,13 +470,16 @@ C-----Alternative to NAG library by M.O
         write(2,*)
         write(2,9996) 'relative tolerance   = ',rtol
         write(2,9996) 'absolute tolerance   = ',atol
-        write(2,9997) 'method               = ',method
+C!        write(2,9997) 'method               = ',method
+        write(2,9997) 'method               = ', iwork(2)
         write(2,9996) 'initial step         = ',dz0
 C!        write(2,9996) 'last step used       = ',hu
 C!        write(2,9996) 'next step to be used = ',h
 C!        write(2,9996) 'z current            = ',tcur
 C!        write(2,9998) '# of steps           = ',nst
+        write(2,9998) '# of steps           = ', iwork(5)
 !        write(2,9998) '# of FCN calls       = ',nre
+        write(2,9998) '# of FCN calls       = ', iwork(7)
 C!        write(2,9998) '# of JAC calls       = ',nje
 C!        write(2,9998) 'last meth ord        = ',nqu
 C!        write(2,9998) 'next meth ord        = ',nq
@@ -493,12 +491,12 @@ C!        write(2,9998) 'max err comp         = ',imxer
      .            '--------------------------'
       else
         write(2,*)
-C        write(2,9999) 'Exit DVODE_F90 with istate = ',istate,
+C        write(2,9999) 'Exit ROWMAP with istate = ',idid,
 C     .            '  and z = ',z
       endif
       
 90003 FORMAT (' At t =',D12.4,'   y =',3D14.6)
-90004 FORMAT (///' Error halt: ISTATE =',I3)
+90004 FORMAT (///' Error halt: idid =',I3)
 
 
       close(2)
