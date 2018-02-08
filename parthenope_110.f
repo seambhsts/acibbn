@@ -368,8 +368,11 @@ C!     .                 WKJAC(NWKJAC)
       DIMENSION        YY(NNUC+1),YYPRIME(NNUC+1)
       EXTERNAL         D02NVF,D02NSF,D02NBF,D02NBZ,D02NBY,D02NYF,FCN
 C-----Alternative NAG library by M.O
-      Real(8) :: H, epsabs, epsrel
-      INTEGER :: BSPN, aufrufe, fehler, fmax
+      Integer, Parameter :: lwork = 8000, liwork = 100
+      INTEGER :: ifcn, ijacv, ifdt, iout, ipar, idid
+      Integer, Dimension(liwork) :: iwork
+      Real(8) :: hs, rtol, atol, rpar
+      Real(8), Dimension(lwork) :: work
       
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
@@ -413,20 +416,33 @@ C!      call d02nvf(inuc+1,ny2dim,maxord,method,petzld,const,zend,
 C!     .            hmin,hmax,h0,maxstp,mxhnil,norm,rwork,ifail)
 C!      call d02nsf(inuc+1,inuc+1,jceval,nwkjac,rwork,ifail)
 C
-      H = 1.d-10
-      bspn = 10
-      epsrel=1.d-5
-      epsabs=1.d-10
-      fmax = 6000000
-      
+      ifcn = 1
+      hs = 0.d0
+      itol = 0
+      ijacv = 0
+      ifdt = 0
+      iout = 0
+      rtol = 1.d-5
+      atol = 1.d-15
+
+      do 100 l=1,20
+        iwork(l)=0
+        work(l)=0d0
+ 100  continue
+      rpar=0.d0
+      ipar=0
+
 C-----Alternative to NAG library by M.O
 C!      itask=4
 C!      call d02nbf(inuc+1,inuc+1,z,zend,yy,yyprime,rwork,rtol,
 C!     .            atol,itol,inform,fcn,ysave,ny2dim,d02nbz,wkjac,nwkjac,
 C!     .            d02nby,itask,itrace,ifail)
-C     
-      CALL gear4(z,zend,bspn,nnuc+1,yy,
-     .           epsabs,epsrel,h,fmax,aufrufe,fehler)
+C
+      iwork(1) = 10000000
+      iwork(2) = 1
+      CALL rowmap(NNUC+1,FCN,ifcn,Z,yyprime,zend,hs,rtol,atol,itol,
+     1                  jacv,ijacv,fdt,ifdt,solout,iout,work,
+     2                  lwork,iwork,liwork,rpar,ipar,idid)
 
       WRITE (2,90003) z, yy(1), yy(2), yy(6)
       
@@ -441,13 +457,12 @@ C!           IERROR = 1
           WRITE (2,90004) fehler
           STOP
         END IF
-        znext=znext*iout
 C!      end do
       
 C-----Write details about resolution of differential equations
 C-----Alternative to NAG library by M.O
 C!      if (ifail.eq.0) then
-      if (fehler.eq.0) then
+      if (idid.eq.1) then
       
         call outend(zend,yy)
 C-----Alternative to NAG library by M.O
@@ -500,7 +515,7 @@ C     .            '  and z = ',z
 
 !-----Alternative to NAG library by M.O
 !      SUBROUTINE FCN(NEQ,Z,YY,YYPRIME,IRES)
-      SUBROUTINE DGL(nspn,NEQ,Z,YY,YYPRIME)
+        SUBROUTINE FCN(NEQ,Z,YY,YYPRIME,rpar,ipar)
 Cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C      This subroutine evaluates the right hand side of the BBN
 C        differential equations
@@ -544,7 +559,8 @@ C-----Output parameters
       EXTERNAL         OUTEVOL
 C
 !-----Alternative to NAG library by M.O
-      Integer :: bspn
+      Integer :: ipar
+      Real(8) :: rpar
 C--------------------------Common variables-----------------------------
       DIMENSION        COEF(4)
       EQUIVALENCE      (ALP,COEF(1)),(BET,COEF(2)),(GAM,COEF(3)),
@@ -1209,8 +1225,7 @@ C-----Matrix inversion
       PARAMETER        (MORD=1)
       INTEGER          NORD               !Order of correction
       ! Dbug M.O
-C      PARAMETER        (EPS=2.D-4)        !Tolerance for convergence (.ge.1.d-7)
-      PARAMETER        (EPS=1.D-3)        !Tolerance for convergence (.ge.1.d-7)
+      PARAMETER        (EPS=2.D-4)        !Tolerance for convergence (.ge.1.d-7)
 C--------------------------Common variables-----------------------------
       INTEGER          MBAD
       INTEGER          INC
